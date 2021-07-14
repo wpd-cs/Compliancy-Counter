@@ -131,12 +131,10 @@ def printCompliance(listOfPatients, complianceDictionary):
 	f.write("Awaiting Review Students: {}\n".format(complianceDictionary["arStudents"]))
 	f.write("Total Student Uploads: {}\n\n".format(studentUploads))
 
-
 	employeeUploads = complianceDictionary["cFaculty"] + complianceDictionary["cStaff"] \
 					  + complianceDictionary["arFaculty"] + complianceDictionary["arStaff"] \
 					  + complianceDictionary["cASC"] + complianceDictionary["cASI"] \
 					  + complianceDictionary["arASC"] + complianceDictionary["arASI"]
-
 
 	f.write("Compliant Faculty: {}\n".format(complianceDictionary["cFaculty"]))
 	f.write("Compliant Staff: {}\n".format(complianceDictionary["cStaff"]))
@@ -147,7 +145,6 @@ def printCompliance(listOfPatients, complianceDictionary):
 	f.write("Awaiting Review ASC: {}\n".format(complianceDictionary["arASC"]))
 	f.write("Awaiting Review ASI: {}\n".format(complianceDictionary["arASI"]))
 	f.write("Total Employee Uploads: {}\n\n".format(employeeUploads))
-
 
 	f.write("Compliant Unknown: {}\n".format(complianceDictionary["cUnknown"]))
 	f.write("Awaiting Review Unknown: {}\n\n".format(complianceDictionary["arUnknown"]))

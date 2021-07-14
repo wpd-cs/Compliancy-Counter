@@ -7,6 +7,8 @@ wpduong@gmail.com
 
 """
 
+from datetime import date
+
 class Patient:
 	def __init__ (self, cwid, status, patientType = ''):
 		"""Initialize class data members"""
@@ -118,24 +120,54 @@ def countCompliance(listOfPatients, complianceDictionary):
 
 def printCompliance(listOfPatients, complianceDictionary):
 	"""Output compliance numbers"""
-	print("Compliant Faculty: {}".format(complianceDictionary["cFaculty"]))
-	print("Compliant Staff: {}".format(complianceDictionary["cStaff"]))
-	print("Compliant Students: {}".format(complianceDictionary["cStudents"]))
-	print("Compliant ASC: {}".format(complianceDictionary["cASC"]))
-	print("Compliant ASI: {}".format(complianceDictionary["cASI"]))
-	print("Compliant Unknown: {}\n".format(complianceDictionary["cUnknown"]))
-	print("Awaiting Review Faculty: {}".format(complianceDictionary["arFaculty"]))
-	print("Awaiting Review Staff: {}".format(complianceDictionary["arStaff"]))
-	print("Awaiting Review Students: {}".format(complianceDictionary["arStudents"]))
-	print("Awaiting Review ASC: {}".format(complianceDictionary["arASC"]))
-	print("Awaiting Review ASI: {}".format(complianceDictionary["arASI"]))
-	print("Awaiting Review Unknown: {}\n".format(complianceDictionary["arUnknown"]))
-	print("Non-Compliant Faculty: {}".format(complianceDictionary["ncFaculty"]))
-	print("Non-Compliant Staff: {}".format(complianceDictionary["ncStaff"]))
-	print("Non-Compliant Students: {}".format(complianceDictionary["ncStudents"]))
-	print("Non-Compliant ASC: {}".format(complianceDictionary["ncASC"]))
-	print("Non-Compliant ASI: {}".format(complianceDictionary["ncASI"]))
-	print("Non-Compliant Unknown: {}".format(complianceDictionary["ncUnknown"]))
+	today = date.today()
+	d = today.strftime("%b-%d-%Y")
+	f = open("Compliance_Count({}).txt".format(d), "w")
+
+
+	studentUploads = complianceDictionary["cStudents"] + complianceDictionary["arStudents"]
+
+	f.write("Compliant Students: {}\n".format(complianceDictionary["cStudents"]))
+	f.write("Awaiting Review Students: {}\n".format(complianceDictionary["arStudents"]))
+	f.write("Total Student Uploads: {}\n\n".format(studentUploads))
+
+
+	employeeUploads = complianceDictionary["cFaculty"] + complianceDictionary["cStaff"] \
+					  + complianceDictionary["arFaculty"] + complianceDictionary["arStaff"] \
+					  + complianceDictionary["cASC"] + complianceDictionary["cASI"] \
+					  + complianceDictionary["arASC"] + complianceDictionary["arASI"]
+
+
+	f.write("Compliant Faculty: {}\n".format(complianceDictionary["cFaculty"]))
+	f.write("Compliant Staff: {}\n".format(complianceDictionary["cStaff"]))
+	f.write("Awaiting Review Faculty: {}\n".format(complianceDictionary["arFaculty"]))
+	f.write("Awaiting Review Staff: {}\n".format(complianceDictionary["arStaff"]))
+	f.write("Compliant ASC: {}\n".format(complianceDictionary["cASC"]))
+	f.write("Compliant ASI: {}\n".format(complianceDictionary["cASI"]))
+	f.write("Awaiting Review ASC: {}\n".format(complianceDictionary["arASC"]))
+	f.write("Awaiting Review ASI: {}\n".format(complianceDictionary["arASI"]))
+	f.write("Total Employee Uploads: {}\n\n".format(employeeUploads))
+
+
+	f.write("Compliant Unknown: {}\n".format(complianceDictionary["cUnknown"]))
+	f.write("Awaiting Review Unknown: {}\n\n".format(complianceDictionary["arUnknown"]))
+
+	unknownUploads = complianceDictionary["cUnknown"] + complianceDictionary["arUnknown"]
+	totalUploads = studentUploads + employeeUploads + unknownUploads
+
+	f.write("Grand Total Uploads: {}\n\n".format(totalUploads))
+
+	f.write("-------------------------------------\n\n")
+
+	f.write("Non-Compliant Faculty: {}\n".format(complianceDictionary["ncFaculty"]))
+	f.write("Non-Compliant Staff: {}\n".format(complianceDictionary["ncStaff"]))
+	f.write("Non-Compliant Students: {}\n".format(complianceDictionary["ncStudents"]))
+	f.write("Non-Compliant ASC: {}\n".format(complianceDictionary["ncASC"]))
+	f.write("Non-Compliant ASI: {}\n".format(complianceDictionary["ncASI"]))
+	f.write("Non-Compliant Unknown: {}\n".format(complianceDictionary["ncUnknown"]))
+
+
+	f.close()
 
 
 def main():

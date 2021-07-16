@@ -206,10 +206,10 @@ def main():
 	readInEmployees(listOfPatients)
 	print("SUCCESS\n")
 	print("Reading student extract ....................... ", end='')
-	# readInStudents(listOfPatients)
+	readInStudents(listOfPatients)
 	print("SUCCESS\n")
 	print("Reading non-state extract ..................... ", end='')
-	# readInNonState(listOfPatients)
+	readInNonState(listOfPatients)
 	print("SUCCESS\n")
 
 

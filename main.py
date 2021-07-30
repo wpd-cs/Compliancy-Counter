@@ -25,8 +25,8 @@ def readInCompliance(listOfPatients):
 
 		for line in myFile:
 			myLine = line.split(',')
-			campusId = myLine[1].strip('"')
-			currstatus = myLine[5]
+			campusId = myLine[3].strip('"')
+			currstatus = myLine[6]
 
 			myPatient = Patient(campusId, currstatus)
 			listOfPatients.append(myPatient)

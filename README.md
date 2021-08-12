@@ -17,13 +17,13 @@ Keeps count of vaccinated patients using CMS and PNC data.
 2. Make sure pyinstaller is installed on your computer (can only be downloaded after Python is installed)
 <ol>- Link to instructions on installing Pyinstaller: https://pyinstaller.readthedocs.io/en/stable/installation.html</ol>
 
-3. Navigate to the file directory of ***main.py*** and copy the address
+3. Navigate to the file directory of **main.py** and copy the address
 
-4. In Command Prompt, type ***cd [file address]*** then press Enter
+4. In Command Prompt, type **cd [file address]** then press Enter
 
-5. Once in the correct directory, type ***pyinstaller --onefile main.py*** then press Enter
+5. Once in the correct directory, type **pyinstaller --onefile main.py** then press Enter
 <ol>- If unsuccessful at first, repeat step 5 until it is successful</ol>
 
-6. Move the executable file out of the ***dist*** folder into the directory that holds ***dist***
+6. Move the executable file out of the **dist** folder into the directory that holds **dist**
 
 7. Remake the executable file if Windows Antivirus keeps removing the executable

@@ -5,10 +5,10 @@ Keeps count of vaccinated patients using CMS and PNC data.
 
 ## To Make the Executable...
 1. Make sure Python is installed on your computer
-&nbsp;- Link to the [Python Download Page](https://www.python.org/downloads/)
+<ol>- Link to the [Python Download Page](https://www.python.org/downloads/)</ol>
 
 2. Make sure pyinstaller is installed on your computer (can only be downloaded after Python is installed)
-&nbsp;- Link to instructions on [installing Pyinstaller](https://pyinstaller.readthedocs.io/en/stable/installation.html)
+<ol>- Link to instructions on [installing Pyinstaller](https://pyinstaller.readthedocs.io/en/stable/installation.html)</ol>
 
 3. Navigate to the file directory of ***main.py*** and copy the address
 

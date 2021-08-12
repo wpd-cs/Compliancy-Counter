@@ -10,6 +10,7 @@ Last Updated: 08/12/2021
 """
 
 from datetime import date
+import csv
 
 class Patient:
 	def __init__ (self, cwid, status, patientType = ''):
@@ -76,10 +77,11 @@ def readInNonState(listOfPatients):
 					patient.patientType = myLine[9]
 
 
-def countCompliance(listOfPatients, complianceDictionary):
+def countCompliance(listOfPatients, complianceDictionary, compliantId):
 	"""Count number for each category"""
 	for patient in listOfPatients:
-		if patient.status == '"Compliant with Standard Requirements"':
+		if (patient.status == '"Compliant with Standard Requirements"' or\
+		   patient.status == '"Exemption: Pos COVID-19 90 Days"'):
 			if patient.patientType == "Faculty":
 				complianceDictionary["cFaculty"] += 1
 			elif patient.patientType == "Staff":
@@ -92,6 +94,8 @@ def countCompliance(listOfPatients, complianceDictionary):
 				complianceDictionary["cASI"] += 1
 			else:
 				complianceDictionary["cUnknown"] += 1
+			temp = [patient.cwid]
+			compliantId.append(temp)
 		if patient.status == '"Awaiting Review"':
 			if patient.patientType == "Faculty":
 				complianceDictionary["arFaculty"] += 1
@@ -132,7 +136,8 @@ def countCompliance(listOfPatients, complianceDictionary):
 			else:
 				complianceDictionary["reUnknown"] += 1
 		if not (patient.status == '"Compliant with Standard Requirements"' or patient.status == '"Awaiting Review"' or\
-				patient.status == '"Exemption: Medical COVID-19"' or patient.status == '"Exemption: Religious COVID-19"'):
+				patient.status == '"Exemption: Medical COVID-19"' or patient.status == '"Exemption: Religious COVID-19"' \
+				or patient.status == '"Exemption: Pos COVID-19 90 Days"'):
 			if patient.patientType == "Faculty":
 				complianceDictionary["ncFaculty"] += 1
 			elif patient.patientType == "Staff":
@@ -226,11 +231,27 @@ def printCompliance(listOfPatients, complianceDictionary):
 	f.close()
 
 
+def getCompliantId(listOfPatients, complianceDictionary, compliantId):
+	"""Output compliant CWIDs"""
+	today = date.today()
+	d = today.strftime("%m-%d-%Y")
+	f = open("Compliance CWID ({}).csv".format(d), "w", newline = "")
+
+	with f:
+		write = csv.writer(f)
+		write.writerows(compliantId)
+
+	f.close()
+
+
 def main():
 	"""Main Function"""
 
 	# Initialize variables
 	listOfPatients = []
+
+	# Compliant CWIDs
+	compliantId = []
 
 	complianceDictionary = {
 		"cFaculty" : 0,
@@ -293,10 +314,14 @@ def main():
 
 	# Count compliance
 	print("Counting compliance ........................... ", end='')
-	countCompliance(listOfPatients, complianceDictionary)
+	countCompliance(listOfPatients, complianceDictionary, compliantId)
 	print("SUCCESS\n")
 
 	# Output compliance
 	printCompliance(listOfPatients, complianceDictionary)
+
+	# Output compliant CWIDs
+	getCompliantId(listOfPatients, complianceDictionary, compliantId)
+
 
 main()

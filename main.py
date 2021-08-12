@@ -5,6 +5,8 @@ William Duong
 Mon July 12, 2021
 wpduong@gmail.com
 
+Last Updated: 08/12/2021
+
 """
 
 from datetime import date
@@ -103,7 +105,34 @@ def countCompliance(listOfPatients, complianceDictionary):
 				complianceDictionary["arASI"] += 1
 			else:
 				complianceDictionary["arUnknown"] += 1
-		if not (patient.status == '"Compliant with Standard Requirements"' or patient.status == '"Awaiting Review"'):
+		if patient.status == '"Exemption: Medical COVID-19"':
+			if patient.patientType == "Faculty":
+				complianceDictionary["meFaculty"] += 1
+			elif patient.patientType == "Staff":
+				complianceDictionary["meStaff"] += 1
+			elif patient.patientType == "Student":
+				complianceDictionary["meStudents"] += 1
+			elif patient.patientType == "ASC":
+				complianceDictionary["meASC"] += 1
+			elif patient.patientType == "ASI":
+				complianceDictionary["meASI"] += 1
+			else:
+				complianceDictionary["meUnknown"] += 1
+		if patient.status == '"Exemption: Religious COVID-19"':
+			if patient.patientType == "Faculty":
+				complianceDictionary["reFaculty"] += 1
+			elif patient.patientType == "Staff":
+				complianceDictionary["reStaff"] += 1
+			elif patient.patientType == "Student":
+				complianceDictionary["reStudents"] += 1
+			elif patient.patientType == "ASC":
+				complianceDictionary["reASC"] += 1
+			elif patient.patientType == "ASI":
+				complianceDictionary["reASI"] += 1
+			else:
+				complianceDictionary["reUnknown"] += 1
+		if not (patient.status == '"Compliant with Standard Requirements"' or patient.status == '"Awaiting Review"' or\
+				patient.status == '"Exemption: Medical COVID-19"' or patient.status == '"Exemption: Religious COVID-19"'):
 			if patient.patientType == "Faculty":
 				complianceDictionary["ncFaculty"] += 1
 			elif patient.patientType == "Staff":
@@ -154,6 +183,36 @@ def printCompliance(listOfPatients, complianceDictionary):
 
 	f.write("Grand Total Uploads: {:,}\n\n".format(totalUploads))
 
+	f.write("Medical Exemption Students: {:,}\n".format(complianceDictionary["meStudents"]))
+	f.write("Medical Exemption Faculty: {:,}\n".format(complianceDictionary["meFaculty"]))
+	f.write("Medical Exemption Staff: {:,}\n".format(complianceDictionary["meStaff"]))
+	f.write("Medical Exemption ASI: {:,}\n".format(complianceDictionary["meASI"]))
+	f.write("Medical Exemption ASC: {:,}\n".format(complianceDictionary["meASC"]))
+	f.write("Medical Exemption Unknown: {:,}\n".format(complianceDictionary["meUnknown"]))
+
+	totalMed = complianceDictionary["meStudents"] + complianceDictionary["meFaculty"] \
+			   + complianceDictionary["meStaff"] + complianceDictionary["meASI"] \
+			   + complianceDictionary["meASC"] + complianceDictionary["meUnknown"]
+
+	f.write("Total Medical Exemptions: {:,}\n\n".format(totalMed))
+
+	f.write("Religious Exemption Students: {:,}\n".format(complianceDictionary["reStudents"]))
+	f.write("Religious Exemption Faculty: {:,}\n".format(complianceDictionary["reFaculty"]))
+	f.write("Religious Exemption Staff: {:,}\n".format(complianceDictionary["reStaff"]))
+	f.write("Religious Exemption ASI: {:,}\n".format(complianceDictionary["reASI"]))
+	f.write("Religious Exemption ASC: {:,}\n".format(complianceDictionary["reASC"]))
+	f.write("Religious Exemption Unknown: {:,}\n".format(complianceDictionary["reUnknown"]))
+
+	totalRel = complianceDictionary["reStudents"] + complianceDictionary["reFaculty"] \
+			   + complianceDictionary["reStaff"] + complianceDictionary["reASI"] \
+			   + complianceDictionary["reASC"] + complianceDictionary["reUnknown"]
+
+	f.write("Total Religious Exemptions: {:,}\n\n".format(totalRel))
+
+	totalExemp = totalMed + totalRel
+
+	f.write("Grand Total Exemptions: {:,}\n\n".format(totalExemp))
+
 	f.write("-------------------------------------\n\n")
 
 	f.write("Non-Compliant Faculty: {:,}\n".format(complianceDictionary["ncFaculty"]))
@@ -193,7 +252,21 @@ def main():
 		"ncStudents" : 0,
 		"ncASC" : 0,
 		"ncASI" : 0,
-		"ncUnknown" : 0
+		"ncUnknown" : 0,
+
+		"meFaculty" : 0,
+		"meStaff" : 0,
+		"meStudents" : 0,
+		"meASC" : 0,
+		"meASI" : 0,
+		"meUnknown" : 0,
+
+		"reFaculty" : 0,
+		"reStaff" : 0,
+		"reStudents" : 0,
+		"reASC" : 0,
+		"reASI" : 0,
+		"reUnknown" : 0,
 	}
 
 

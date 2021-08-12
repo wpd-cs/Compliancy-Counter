@@ -3,6 +3,14 @@ Keeps count of vaccinated patients using CMS and PNC data.
 
 *Last Updated: 08/12/2021*
 
+## File Naming
+- CSV export from PNC must be named: ***compliance.txt***
+- Employee extract from Central IT folder must be named: ***employee.txt***
+- Student extract from Central IT folder must be named: ***student.txt***
+- Non-state extract from Central It folder must be named: ***nonstate.txt***
+
+***Make sure these files are in the same directory as the executable***
+
 ## To Make the Executable...
 1. Make sure Python is installed on your computer
 <ol>- Link to the Python Download Page: https://www.python.org/downloads/</ol>
@@ -20,11 +28,3 @@ Keeps count of vaccinated patients using CMS and PNC data.
 6. Move the executable file out of the ***dist*** folder into the directory that holds ***dist***
 
 7. Remake the executable file if Windows Antivirus keeps removing the executable
-
-## File Naming
-- CSV export from PNC must be named: ***compliance.txt***
-- Employee extract from Central IT folder must be named: ***employee.txt***
-- Student extract from Central IT folder must be named: ***student.txt***
-- Non-state extract from Central It folder must be named: ***nonstate.txt***
-
-***Make sure these files are in the same directory as the executable***

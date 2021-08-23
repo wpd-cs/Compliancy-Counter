@@ -80,8 +80,7 @@ def readInNonState(listOfPatients):
 def countCompliance(listOfPatients, complianceDictionary, compliantId):
 	"""Count number for each category"""
 	for patient in listOfPatients:
-		if (patient.status == '"Compliant with Standard Requirements"' or\
-		   patient.status == '"Exemption: Pos COVID-19 90 Days"'):
+		if (patient.status == '"Compliant with Standard Requirements"'):
 			if patient.patientType == "Faculty":
 				complianceDictionary["cFaculty"] += 1
 			elif patient.patientType == "Staff":
@@ -136,8 +135,7 @@ def countCompliance(listOfPatients, complianceDictionary, compliantId):
 			else:
 				complianceDictionary["reUnknown"] += 1
 		if not (patient.status == '"Compliant with Standard Requirements"' or patient.status == '"Awaiting Review"' or\
-				patient.status == '"Exemption: Medical COVID-19"' or patient.status == '"Exemption: Religious COVID-19"' \
-				or patient.status == '"Exemption: Pos COVID-19 90 Days"'):
+				patient.status == '"Exemption: Medical COVID-19"' or patient.status == '"Exemption: Religious COVID-19"'):
 			if patient.patientType == "Faculty":
 				complianceDictionary["ncFaculty"] += 1
 			elif patient.patientType == "Staff":

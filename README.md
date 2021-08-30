@@ -1,7 +1,7 @@
 # Compliancy Counter
 Keeps count of vaccinated patients using CMS and PNC data.
 
-*Last Updated: 08/12/2021*
+*Last Updated: 08/30/2021*
 
 ## File Naming
 ***Make sure these files are in the same directory as the executable***

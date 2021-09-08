@@ -317,7 +317,7 @@ def main():
 	printCompliance(listOfPatients, complianceDictionary)
 
 	# Output compliant CWIDs
-	getCompliantId(listOfPatients, complianceDictionary, compliantId)
+	getCompliantId(compliantId)
 
 
 main()

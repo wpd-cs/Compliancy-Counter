@@ -229,11 +229,9 @@ def printCompliance(listOfPatients, complianceDictionary):
 	f.close()
 
 
-def getCompliantId(listOfPatients, complianceDictionary, compliantId):
+def getCompliantId(compliantId):
 	"""Output compliant CWIDs"""
-	today = date.today()
-	d = today.strftime("%m-%d-%Y")
-	f = open("Compliance CWID ({}).csv".format(d), "w", newline = "")
+	f = open("Compliance CWID.csv")
 
 	with f:
 		write = csv.writer(f)

@@ -231,7 +231,7 @@ def printCompliance(listOfPatients, complianceDictionary):
 
 def getCompliantId(compliantId):
 	"""Output compliant CWIDs"""
-	f = open("Compliance CWID.csv")
+	f = open("Compliance CWID.csv", "w")
 
 	with f:
 		write = csv.writer(f)

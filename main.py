@@ -77,7 +77,7 @@ def readInNonState(listOfPatients):
 					patient.patientType = myLine[9]
 
 
-def countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId):
+def countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId, participantId):
 	"""Count number for each category"""
 	for patient in listOfPatients:
 		if (patient.status == '"Compliant with Standard Requirements"'):
@@ -95,6 +95,7 @@ def countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId)
 				complianceDictionary["cUnknown"] += 1
 			temp = [patient.cwid]
 			compliantId.append(temp)
+			participantId.append(temp)
 		if patient.status == '"Awaiting Review"':
 			if patient.patientType == "Faculty":
 				complianceDictionary["arFaculty"] += 1
@@ -108,6 +109,8 @@ def countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId)
 				complianceDictionary["arASI"] += 1
 			else:
 				complianceDictionary["arUnknown"] += 1
+			temp = [patient.cwid]
+			participantId.append(temp)
 		if patient.status == '"Exemption: Medical COVID-19"':
 			if patient.patientType == "Faculty":
 				complianceDictionary["meFaculty"] += 1
@@ -123,6 +126,8 @@ def countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId)
 				complianceDictionary["meUnknown"] += 1
 			temp = [patient.cwid, patient.status.strip('"')]
 			exemptId.append(temp)
+			temp2 = [patient.cwid]
+			participantId.append(temp2)
 		if patient.status == '"Exemption: Religious COVID-19"':
 			if patient.patientType == "Faculty":
 				complianceDictionary["reFaculty"] += 1
@@ -138,9 +143,11 @@ def countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId)
 				complianceDictionary["reUnknown"] += 1
 			temp = [patient.cwid, patient.status.strip('"')]
 			exemptId.append(temp)
-		# if patient.status == '"Exemption: Pos COVID-19 90 Days"':
-		# 	temp = [patient.cwid, patient.status.strip('"')]
-		# 	exemptId.append(temp)
+			temp2 = [patient.cwid]
+			participantId.append(temp2)
+		if patient.status == '"Exemption: Pos COVID-19 90 Days"':
+			temp = [patient.cwid]
+			participantId.append(temp)
 		if not (patient.status == '"Compliant with Standard Requirements"' or patient.status == '"Awaiting Review"' or\
 				patient.status == '"Exemption: Medical COVID-19"' or patient.status == '"Exemption: Religious COVID-19"'):
 			if patient.patientType == "Faculty":
@@ -248,6 +255,7 @@ def getCompliantId(compliantId):
 
 	f.close()
 
+
 def getExemptId(exemptId):
 	"""Output exempt CWIDs"""
 	today = date.today()
@@ -261,7 +269,17 @@ def getExemptId(exemptId):
 	f.close()
 
 
-# Compliant, AR, ME, RE, CP
+def getParticipantId(participantId):
+	"""Output exempt CWIDs"""
+	today = date.today()
+	d = today.strftime("%b-%d-%Y")
+	f = open("PNC Compliant List({}).csv".format(d), "w", newline='')
+
+	with f:
+		write = csv.writer(f)
+		write.writerows(participantId)
+
+	f.close()
 
 
 def main():
@@ -273,8 +291,11 @@ def main():
 	# Compliant CWIDs
 	compliantId = []
 
-	#Exempt CWIDS
+	# Exempt CWIDS
 	exemptId = []
+
+	# Participant CWIDS
+	participantId = []
 
 	complianceDictionary = {
 		"cFaculty" : 0,
@@ -322,12 +343,12 @@ def main():
 	print("Reading employee extract ...................... ", end='')
 	readInEmployees(listOfPatients)
 	print("SUCCESS\n")
-	# print("Reading student extract ....................... ", end='')
-	# readInStudents(listOfPatients)
-	# print("SUCCESS\n")
-	# print("Reading non-state extract ..................... ", end='')
-	# readInNonState(listOfPatients)
-	# print("SUCCESS\n")
+	print("Reading student extract ....................... ", end='')
+	readInStudents(listOfPatients)
+	print("SUCCESS\n")
+	print("Reading non-state extract ..................... ", end='')
+	readInNonState(listOfPatients)
+	print("SUCCESS\n")
 
 
 
@@ -338,7 +359,7 @@ def main():
 
 	# Count compliance
 	print("Counting compliance ........................... ", end='')
-	countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId)
+	countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId, participantId)
 	print("SUCCESS\n")
 
 	# Output compliance
@@ -349,6 +370,9 @@ def main():
 
 	# Output exempt CWIDs
 	getExemptId(exemptId)
+
+	# Output participant CWIDs
+	getParticipantId(participantId)
 
 
 main()

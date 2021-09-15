@@ -5,12 +5,13 @@ William Duong
 Mon July 12, 2021
 wpduong@gmail.com
 
-Last Updated: 09/10/2021
+Last Updated: 09/15/2021
 
 """
 
 from datetime import date
 import csv
+import os
 
 class Patient:
 	def __init__ (self, cwid, status, patientType = ''):
@@ -164,11 +165,13 @@ def countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId,
 				complianceDictionary["ncUnknown"] += 1
 
 
-def printCompliance(listOfPatients, complianceDictionary):
+def printCompliance(listOfPatients, complianceDictionary, path):
 	"""Output compliance numbers"""
 	today = date.today()
 	d = today.strftime("%b-%d-%Y")
-	f = open("Compliance_Count({}).txt".format(d), "w")
+
+	completeName = os.path.join(path, "Compliance_NUMBERS({}).txt".format(d))
+	f = open(completeName, "w")
 
 
 	studentUploads = complianceDictionary["cStudents"] + complianceDictionary["arStudents"]
@@ -243,41 +246,77 @@ def printCompliance(listOfPatients, complianceDictionary):
 	f.close()
 
 
-def getCompliantId(compliantId):
+def getCompliantId(compliantId, path):
 	"""Output compliant CWIDs"""
 	today = date.today()
 	d = today.strftime("%b-%d-%Y")
-	f = open("Compliance CWID({}).csv".format(d), "w", newline='')
+
+	completeName = os.path.join(path, "Compliance CWID({}).csv".format(d))
+	f = open(completeName, "w", newline='')
+
 
 	with f:
 		write = csv.writer(f)
 		write.writerows(compliantId)
 
+
 	f.close()
 
 
-def getExemptId(exemptId):
-	"""Output exempt CWIDs"""
+def getExemptId(exemptId, path):
+	"""Output exemption CWIDs for Central IT"""
+
+	writeList = []
+
+	for x in exemptId:
+		temp = [x[0]]
+		writeList.append(temp)
+
 	today = date.today()
 	d = today.strftime("%b-%d-%Y")
-	f = open("Exempt List({}).csv".format(d), "w", newline='')
+
+	completeName = os.path.join(path, "Exemption List({}).csv".format(d))
+	f = open(completeName, "w", newline='')
+
+
+	with f:
+		write = csv.writer(f)
+		write.writerows(writeList)
+
+
+	f.close()
+
+
+def getPSexemptions(exemptId, path):
+	"""Output exempt CWIDs for PeopleSoft"""
+	today = date.today()
+	d = today.strftime("%b-%d-%Y")
+
+	completeName = os.path.join(path, "Exempt List({}).csv".format(d))
+	f = open(completeName, "w", newline='')
+
 
 	with f:
 		write = csv.writer(f)
 		write.writerows(exemptId)
 
+
 	f.close()
 
 
-def getParticipantId(participantId):
-	"""Output exempt CWIDs"""
+def getParticipantId(participantId, path):
+	"""Output participant CWIDs"""
 	today = date.today()
 	d = today.strftime("%b-%d-%Y")
-	f = open("PNC Compliant List({}).csv".format(d), "w", newline='')
+
+	completeName = os.path.join(path, "PNC Compliant List({}).csv".format(d))
+	f = open(completeName, "w", newline='')
+
 
 	with f:
 		write = csv.writer(f)
 		write.writerows(participantId)
+
 
 	f.close()
 
@@ -351,7 +390,6 @@ def main():
 	print("SUCCESS\n")
 
 
-
 	# For debugging:
 	# for patient in listOfPatients:
 	# 	print("{}: {}, {}".format(patient.cwid, patient.patientType, patient.status))
@@ -362,17 +400,34 @@ def main():
 	countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId, participantId)
 	print("SUCCESS\n")
 
+
+	print("Creating output files ......................... ", end='')
+
+	# Creating folder
+	today = date.today()
+	d = today.strftime("%b-%d-%Y")
+
+	parent_dir = os.getcwd()
+	path = os.path.join(parent_dir, d)
+	os.mkdir(path)
+
+	print("SUCCESS\n")
+
+
 	# Output compliance
-	printCompliance(listOfPatients, complianceDictionary)
+	printCompliance(listOfPatients, complianceDictionary, path)
 
 	# Output compliant CWIDs
-	getCompliantId(compliantId)
+	getCompliantId(compliantId, path)
 
-	# Output exempt CWIDs
-	getExemptId(exemptId)
+	# Output exemption CWIDs for Central IT
+	getExemptId(exemptId, path), path
+
+	# Output exempt CWIDs for PeopleSoft
+	getPSexemptions(exemptId, path)
 
 	# Output participant CWIDs
-	getParticipantId(participantId)
+	getParticipantId(participantId, path)
 
 
 main()

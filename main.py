@@ -421,7 +421,7 @@ def main():
 	getCompliantId(compliantId, path)
 
 	# Output exemption CWIDs for Central IT
-	getExemptId(exemptId, path), path
+	getExemptId(exemptId, path)
 
 	# Output exempt CWIDs for PeopleSoft
 	getPSexemptions(exemptId, path)

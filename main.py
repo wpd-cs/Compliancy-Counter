@@ -9,7 +9,7 @@ Last Updated: 09/15/2021
 
 """
 
-from datetime import date
+import datetime
 import csv
 import os
 
@@ -374,7 +374,6 @@ def main():
 	}
 
 
-
 	# Begin read-in processes
 	print("Reading compliance from PNC ................... ", end='')
 	readInCompliance(listOfPatients)
@@ -404,8 +403,8 @@ def main():
 	print("Creating output files ......................... ", end='')
 
 	# Creating folder
-	today = date.today()
-	d = today.strftime("%b-%d-%Y")
+	d = datetime.datetime.now()
+	d = d.strftime("%m-%d-%y %I:%M:%S %p")
 
 	parent_dir = os.getcwd()
 	path = os.path.join(parent_dir, d)

@@ -248,7 +248,7 @@ def printCompliance(listOfPatients, complianceDictionary, path):
 
 def getCompliantId(compliantId, path):
 	"""Output compliant CWIDs"""
-	today = date.today()
+	today = datetime.date.today()
 	d = today.strftime("%b-%d-%Y")
 
 	completeName = os.path.join(path, "Compliance CWID({}).csv".format(d))
@@ -272,7 +272,7 @@ def getExemptId(exemptId, path):
 		temp = [x[0]]
 		writeList.append(temp)
 
-	today = date.today()
+	today = datetime.date.today()
 	d = today.strftime("%b-%d-%Y")
 
 	completeName = os.path.join(path, "Exemption List({}).csv".format(d))
@@ -289,7 +289,7 @@ def getExemptId(exemptId, path):
 
 def getPSexemptions(exemptId, path):
 	"""Output exempt CWIDs for PeopleSoft"""
-	today = date.today()
+	today = datetime.date.today()
 	d = today.strftime("%b-%d-%Y")
 
 	completeName = os.path.join(path, "Exempt List({}).csv".format(d))
@@ -306,7 +306,7 @@ def getPSexemptions(exemptId, path):
 
 def getParticipantId(participantId, path):
 	"""Output participant CWIDs"""
-	today = date.today()
+	today = datetime.date.today()
 	d = today.strftime("%b-%d-%Y")
 
 	completeName = os.path.join(path, "PNC Compliant List({}).csv".format(d))

@@ -404,7 +404,7 @@ def main():
 
 	# Creating folder
 	d = datetime.datetime.now()
-	d = d.strftime("%m-%d-%y %I:%M:%S %p")
+	d = d.strftime("%m-%d-%y %H%M%S %p")
 
 	parent_dir = os.getcwd()
 	path = os.path.join(parent_dir, d)

@@ -167,7 +167,7 @@ def countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId,
 
 def printCompliance(listOfPatients, complianceDictionary, path):
 	"""Output compliance numbers"""
-	today = date.today()
+	today = datetime.date.today()
 	d = today.strftime("%b-%d-%Y")
 
 	completeName = os.path.join(path, "Compliance_NUMBERS({}).txt".format(d))

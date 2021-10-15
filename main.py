@@ -14,10 +14,11 @@ import csv
 import os
 
 class Patient:
-	def __init__ (self, cwid, status, patientType = ''):
+	def __init__ (self, cwid, status, acadStatus = '', patientType = ''):
 		"""Initialize class data members"""
 		self.cwid = cwid
 		self.status = status
+		self.acadStatus = acadStatus
 		self.patientType = patientType
 
 
@@ -62,6 +63,7 @@ def readInStudents(listOfPatients):
 			for patient in listOfPatients:
 				if (myLine[0] == patient.cwid) and (patient.patientType == ""):
 					patient.patientType = myLine[45]
+					patient.acadStatus = myLine[52]
 
 
 def readInNonState(listOfPatients):
@@ -87,7 +89,10 @@ def countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId,
 			elif patient.patientType == "Staff":
 				complianceDictionary["cStaff"] += 1
 			elif patient.patientType == "Student":
-				complianceDictionary["cStudents"] += 1
+				if patient.acadStatus == "ACTIVE":
+					complianceDictionary["cCurStudents"] += 1
+				else:
+					complianceDictionary["cFutStudents"] += 1
 			elif patient.patientType == "ASC":
 				complianceDictionary["cASC"] += 1
 			elif patient.patientType == "ASI":
@@ -103,7 +108,10 @@ def countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId,
 			elif patient.patientType == "Staff":
 				complianceDictionary["arStaff"] += 1
 			elif patient.patientType == "Student":
-				complianceDictionary["arStudents"] += 1
+				if patient.acadStatus == "ACTIVE":
+					complianceDictionary["arCurStudents"] += 1
+				else:
+					complianceDictionary["arFutStudents"] += 1
 			elif patient.patientType == "ASC":
 				complianceDictionary["arASC"] += 1
 			elif patient.patientType == "ASI":
@@ -118,7 +126,10 @@ def countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId,
 			elif patient.patientType == "Staff":
 				complianceDictionary["meStaff"] += 1
 			elif patient.patientType == "Student":
-				complianceDictionary["meStudents"] += 1
+				if patient.acadStatus == "ACTIVE":
+					complianceDictionary["meCurStudents"] += 1
+				else:
+					complianceDictionary["meFutStudents"] += 1
 			elif patient.patientType == "ASC":
 				complianceDictionary["meASC"] += 1
 			elif patient.patientType == "ASI":
@@ -135,7 +146,10 @@ def countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId,
 			elif patient.patientType == "Staff":
 				complianceDictionary["reStaff"] += 1
 			elif patient.patientType == "Student":
-				complianceDictionary["reStudents"] += 1
+				if patient.acadStatus == "ACTIVE":
+					complianceDictionary["reCurStudents"] += 1
+				else:
+					complianceDictionary["arFutStudents"] += 1
 			elif patient.patientType == "ASC":
 				complianceDictionary["reASC"] += 1
 			elif patient.patientType == "ASI":
@@ -156,7 +170,10 @@ def countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId,
 			elif patient.patientType == "Staff":
 				complianceDictionary["ncStaff"] += 1
 			elif patient.patientType == "Student":
-				complianceDictionary["ncStudents"] += 1
+				if patient.acadStatus == "ACTIVE":
+					complianceDictionary["ncCurStudents"] += 1
+				else:
+					complianceDictionary["ncFutStudents"] += 1
 			elif patient.patientType == "ASC":
 				complianceDictionary["ncASC"] += 1
 			elif patient.patientType == "ASI":
@@ -174,10 +191,13 @@ def printCompliance(listOfPatients, complianceDictionary, path):
 	f = open(completeName, "w")
 
 
-	studentUploads = complianceDictionary["cStudents"] + complianceDictionary["arStudents"]
+	studentUploads = complianceDictionary["cCurStudents"] + complianceDictionary["arCurStudents"] \
+					 + complianceDictionary["cFutStudents"] + complianceDictionary["arFutStudents"]
 
-	f.write("Compliant Students: {:,}\n".format(complianceDictionary["cStudents"]))
-	f.write("Awaiting Review Students: {:,}\n".format(complianceDictionary["arStudents"]))
+	f.write("Compliant Active Students: {:,}\n".format(complianceDictionary["cCurStudents"]))
+	f.write("Compliant Future Students: {:,}\n".format(complianceDictionary["cFutStudents"]))
+	f.write("Awaiting Review Active Students: {:,}\n".format(complianceDictionary["arCurStudents"]))
+	f.write("Awaiting Review Future Students: {:,}\n".format(complianceDictionary["arFutStudents"]))
 	f.write("Total Student Uploads: {:,}\n\n".format(studentUploads))
 
 	employeeUploads = complianceDictionary["cFaculty"] + complianceDictionary["cStaff"] \
@@ -203,29 +223,33 @@ def printCompliance(listOfPatients, complianceDictionary, path):
 
 	f.write("Grand Total Uploads: {:,}\n\n".format(totalUploads))
 
-	f.write("Medical Exemption Students: {:,}\n".format(complianceDictionary["meStudents"]))
+	f.write("Medical Exemption Active Students: {:,}\n".format(complianceDictionary["meCurStudents"]))
+	f.write("Medical Exemption Future Students: {:,}\n".format(complianceDictionary["meFutStudents"]))
 	f.write("Medical Exemption Faculty: {:,}\n".format(complianceDictionary["meFaculty"]))
 	f.write("Medical Exemption Staff: {:,}\n".format(complianceDictionary["meStaff"]))
 	f.write("Medical Exemption ASI: {:,}\n".format(complianceDictionary["meASI"]))
 	f.write("Medical Exemption ASC: {:,}\n".format(complianceDictionary["meASC"]))
 	f.write("Medical Exemption Unknown: {:,}\n".format(complianceDictionary["meUnknown"]))
 
-	totalMed = complianceDictionary["meStudents"] + complianceDictionary["meFaculty"] \
-			   + complianceDictionary["meStaff"] + complianceDictionary["meASI"] \
-			   + complianceDictionary["meASC"] + complianceDictionary["meUnknown"]
+	totalMed = complianceDictionary["meCurStudents"] + complianceDictionary["meFutStudents"] \
+			   + complianceDictionary["meFaculty"] + complianceDictionary["meStaff"] \
+			   + complianceDictionary["meASI"] + complianceDictionary["meASC"] \
+			   + complianceDictionary["meUnknown"]
 
 	f.write("Total Medical Exemptions: {:,}\n\n".format(totalMed))
 
-	f.write("Religious Exemption Students: {:,}\n".format(complianceDictionary["reStudents"]))
+	f.write("Religious Exemption Active Students: {:,}\n".format(complianceDictionary["reCurStudents"]))
+	f.write("Religious Exemption Future Students: {:,}\n".format(complianceDictionary["reFutStudents"]))
 	f.write("Religious Exemption Faculty: {:,}\n".format(complianceDictionary["reFaculty"]))
 	f.write("Religious Exemption Staff: {:,}\n".format(complianceDictionary["reStaff"]))
 	f.write("Religious Exemption ASI: {:,}\n".format(complianceDictionary["reASI"]))
 	f.write("Religious Exemption ASC: {:,}\n".format(complianceDictionary["reASC"]))
 	f.write("Religious Exemption Unknown: {:,}\n".format(complianceDictionary["reUnknown"]))
 
-	totalRel = complianceDictionary["reStudents"] + complianceDictionary["reFaculty"] \
-			   + complianceDictionary["reStaff"] + complianceDictionary["reASI"] \
-			   + complianceDictionary["reASC"] + complianceDictionary["reUnknown"]
+	totalRel = complianceDictionary["reStudents"] + complianceDictionary["reFutStudents"] \
+			   + complianceDictionary["reFaculty"] + complianceDictionary["reStaff"] \
+			   + complianceDictionary["reASI"] + complianceDictionary["reASC"] \
+			   + complianceDictionary["reUnknown"]
 
 	f.write("Total Religious Exemptions: {:,}\n\n".format(totalRel))
 
@@ -235,9 +259,10 @@ def printCompliance(listOfPatients, complianceDictionary, path):
 
 	f.write("-------------------------------------\n\n")
 
+	f.write("Non-Compliant Active Students: {:,}\n".format(complianceDictionary["ncCurStudents"]))
+	f.write("Non-Compliant Future Students: {:,}\n".format(complianceDictionary["ncFutStudents"]))
 	f.write("Non-Compliant Faculty: {:,}\n".format(complianceDictionary["ncFaculty"]))
 	f.write("Non-Compliant Staff: {:,}\n".format(complianceDictionary["ncStaff"]))
-	f.write("Non-Compliant Students: {:,}\n".format(complianceDictionary["ncStudents"]))
 	f.write("Non-Compliant ASC: {:,}\n".format(complianceDictionary["ncASC"]))
 	f.write("Non-Compliant ASI: {:,}\n".format(complianceDictionary["ncASI"]))
 	f.write("Not in Current Import Non-Compliant: {:,}\n".format(complianceDictionary["ncUnknown"]))
@@ -339,35 +364,40 @@ def main():
 	complianceDictionary = {
 		"cFaculty" : 0,
 		"cStaff" : 0,
-		"cStudents" : 0,
+		"cCurStudents" : 0,
+		"cFutStudents" : 0,
 		"cASC" : 0,
 		"cASI" : 0,
 		"cUnknown" : 0,
 
 		"arFaculty" : 0,
 		"arStaff" : 0,
-		"arStudents" : 0,
+		"arCurStudents" : 0,
+		"arFutStudents" : 0,
 		"arASC" : 0,
 		"arASI" : 0,
 		"arUnknown" : 0,
 
 		"ncFaculty" : 0,
 		"ncStaff" : 0,
-		"ncStudents" : 0,
+		"ncCurStudents" : 0,
+		"ncFutStudents" : 0,
 		"ncASC" : 0,
 		"ncASI" : 0,
 		"ncUnknown" : 0,
 
 		"meFaculty" : 0,
 		"meStaff" : 0,
-		"meStudents" : 0,
+		"meCurStudents" : 0,
+		"meFutStudents" : 0,
 		"meASC" : 0,
 		"meASI" : 0,
 		"meUnknown" : 0,
 
 		"reFaculty" : 0,
 		"reStaff" : 0,
-		"reStudents" : 0,
+		"reCurStudents" : 0,
+		"reFutStudents" : 0,
 		"reASC" : 0,
 		"reASI" : 0,
 		"reUnknown" : 0,

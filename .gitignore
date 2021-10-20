@@ -112,3 +112,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+compliance.txt
+employee.txt
+nonstate.txt
+student.txt

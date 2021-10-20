@@ -246,7 +246,7 @@ def printCompliance(listOfPatients, complianceDictionary, path):
 	f.write("Religious Exemption ASC: {:,}\n".format(complianceDictionary["reASC"]))
 	f.write("Religious Exemption Unknown: {:,}\n".format(complianceDictionary["reUnknown"]))
 
-	totalRel = complianceDictionary["reStudents"] + complianceDictionary["reFutStudents"] \
+	totalRel = complianceDictionary["reCurStudents"] + complianceDictionary["reFutStudents"] \
 			   + complianceDictionary["reFaculty"] + complianceDictionary["reStaff"] \
 			   + complianceDictionary["reASI"] + complianceDictionary["reASC"] \
 			   + complianceDictionary["reUnknown"]

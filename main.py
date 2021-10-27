@@ -80,7 +80,8 @@ def readInNonState(listOfPatients):
 					patient.patientType = myLine[9]
 
 
-def countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId, participantId):
+def countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId, \
+					participantId, activeNCId):
 	"""Count number for each category"""
 	for patient in listOfPatients:
 		if (patient.status == '"Compliant with Standard Requirements"'):
@@ -165,6 +166,12 @@ def countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId,
 			participantId.append(temp)
 		if not (patient.status == '"Compliant with Standard Requirements"' or patient.status == '"Awaiting Review"' or\
 				patient.status == '"Exemption: Medical COVID-19"' or patient.status == '"Exemption: Religious COVID-19"'):
+
+			if (patient.status == '"Non-Compliant- No Data"' or patient.status == '"Non-Compliant (Unmet Requirement)"') \
+			   and patient.patientType != "":
+				temp = [patient.cwid, patient.patientType, patient.status]
+				activeNCId.append(temp)
+
 			if patient.patientType == "Faculty":
 				complianceDictionary["ncFaculty"] += 1
 			elif patient.patientType == "Staff":
@@ -345,11 +352,29 @@ def getParticipantId(participantId, path):
 
 	f.close()
 
+def getActiveNCId(activeNCId, path):
+	"""Output active non-compliant CWIDS"""
+	today = datetime.date.today()
+	d = today.strftime("%b-%d-%Y")
+
+	completeName = os.path.join(path, "Active Non-Compliant({}).csv".format(d))
+	f = open(completeName, "w", newline='')
+
+
+	with f:
+		write = csv.writer(f)
+		write.writerows(activeNCId)
+
+
+	f.close()
+
 
 def main():
 	"""Main Function"""
 
 	# Initialize variables
+
+	# List of patients
 	listOfPatients = []
 
 	# Compliant CWIDs
@@ -360,6 +385,9 @@ def main():
 
 	# Participant CWIDS
 	participantId = []
+
+	# Active non-compliant CWIDS
+	activeNCId = []
 
 	complianceDictionary = {
 		"cFaculty" : 0,
@@ -426,7 +454,8 @@ def main():
 
 	# Count compliance
 	print("Counting compliance ........................... ", end='')
-	countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId, participantId)
+	countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId, \
+					participantId, activeNCId)
 	print("SUCCESS\n")
 
 
@@ -457,6 +486,9 @@ def main():
 
 	# Output participant CWIDs
 	getParticipantId(participantId, path)
+
+	# Output active non-compliant people
+	getActiveNCId(activeNCId, path)
 
 
 main()

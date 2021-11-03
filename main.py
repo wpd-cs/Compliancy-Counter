@@ -141,6 +141,25 @@ def countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId,
 			exemptId.append(temp)
 			temp2 = [patient.cwid]
 			participantId.append(temp2)
+		if patient.status == '"Exemption: Extension COVID-19"':
+			if patient.patientType == "Faculty":
+				complianceDictionary["eeFaculty"] += 1
+			elif patient.patientType == "Staff":
+				complianceDictionary["eeStaff"] += 1
+			elif patient.patientType == "Student":
+				if patient.acadStatus == "ACTIVE":
+					complianceDictionary["eeCurStudents"] += 1
+				else:
+					complianceDictionary["eeFutStudents"] += 1
+			elif patient.patientType == "ASC":
+				complianceDictionary["eeASC"] += 1
+			elif patient.patientType == "ASI":
+				complianceDictionary["eeASI"] += 1
+			else:
+				complianceDictionary["eeUnknown"] += 1
+			temp = [patient.cwid]
+			compliantId.append(temp)
+			participantId.append(temp)
 		if patient.status == '"Exemption: Religious COVID-19"':
 			if patient.patientType == "Faculty":
 				complianceDictionary["reFaculty"] += 1
@@ -244,6 +263,21 @@ def printCompliance(listOfPatients, complianceDictionary, path):
 			   + complianceDictionary["meUnknown"]
 
 	f.write("Total Medical Exemptions: {:,}\n\n".format(totalMed))
+
+	f.write("Extension Exemption Active Students: {:,}\n".format(complianceDictionary["eeCurStudents"]))
+	f.write("Extension Exemption Future Students: {:,}\n".format(complianceDictionary["eeFutStudents"]))
+	f.write("Extension Exemption Faculty: {:,}\n".format(complianceDictionary["eeFaculty"]))
+	f.write("Extension Exemption Staff: {:,}\n".format(complianceDictionary["eeStaff"]))
+	f.write("Extension Exemption ASI: {:,}\n".format(complianceDictionary["eeASI"]))
+	f.write("Extension Exemption ASC: {:,}\n".format(complianceDictionary["eeASC"]))
+	f.write("Extension Exemption Unknown: {:,}\n".format(complianceDictionary["eeUnknown"]))
+
+	totalRel = complianceDictionary["eeCurStudents"] + complianceDictionary["eeFutStudents"] \
+			   + complianceDictionary["eeFaculty"] + complianceDictionary["eeStaff"] \
+			   + complianceDictionary["eeASI"] + complianceDictionary["eeASC"] \
+			   + complianceDictionary["eeUnknown"]
+
+	f.write("Total Extension Exemptions: {:,}\n\n".format(totalRel))
 
 	f.write("Religious Exemption Active Students: {:,}\n".format(complianceDictionary["reCurStudents"]))
 	f.write("Religious Exemption Future Students: {:,}\n".format(complianceDictionary["reFutStudents"]))
@@ -429,6 +463,14 @@ def main():
 		"reASC" : 0,
 		"reASI" : 0,
 		"reUnknown" : 0,
+
+		"eeFaculty" : 0,
+		"eeStaff" : 0,
+		"eeCurStudents" : 0,
+		"eeFutStudents" : 0,
+		"eeASC" : 0,
+		"eeASI" : 0,
+		"eeUnknown" : 0,
 	}
 
 

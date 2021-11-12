@@ -2,10 +2,10 @@
 """
 
 William Duong
-Mon July 12, 2021
+Project started: July 12, 2021
 wpduong@gmail.com
 
-Last Updated: 09/15/2021
+Last Updated: 11/12/2021
 
 """
 
@@ -160,6 +160,11 @@ def countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId,
 			temp = [patient.cwid]
 			compliantId.append(temp)
 			participantId.append(temp)
+		if patient.status == '"Exemption: Breast Feeding COVID"':
+			temp = [patient.cwid, patient.status.strip('"')]
+			exemptId.append(temp)
+			temp2 = [patient.cwid]
+			participantId.append(temp2)
 		if patient.status == '"Exemption: Religious COVID-19"':
 			if patient.patientType == "Faculty":
 				complianceDictionary["reFaculty"] += 1
@@ -184,10 +189,11 @@ def countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId,
 			temp = [patient.cwid]
 			participantId.append(temp)
 		if not (patient.status == '"Compliant with Standard Requirements"' or patient.status == '"Awaiting Review"' or\
-				patient.status == '"Exemption: Medical COVID-19"' or patient.status == '"Exemption: Religious COVID-19"'):
+				patient.status == '"Exemption: Medical COVID-19"' or patient.status == '"Exemption: Religious COVID-19"' or\
+				patient.status == '"Exemption: Extension COVID-19"' or patient.status == '"Exemption: Breast Feeding COVID"'):
 
 			if (patient.status == '"Non-Compliant- No Data"' or patient.status == '"Non-Compliant (Unmet Requirement)"') \
-			   and patient.patientType != "":
+			    and patient.patientType != "":
 				temp = [patient.cwid, patient.patientType, patient.status]
 				activeNCId.append(temp)
 
@@ -220,10 +226,10 @@ def printCompliance(listOfPatients, complianceDictionary, path):
 	studentUploads = complianceDictionary["cCurStudents"] + complianceDictionary["arCurStudents"] \
 					 + complianceDictionary["cFutStudents"] + complianceDictionary["arFutStudents"]
 
-	f.write("Compliant Active Students: {:,}\n".format(complianceDictionary["cCurStudents"]))
-	f.write("Compliant Future Students: {:,}\n".format(complianceDictionary["cFutStudents"]))
-	f.write("Awaiting Review Active Students: {:,}\n".format(complianceDictionary["arCurStudents"]))
-	f.write("Awaiting Review Future Students: {:,}\n".format(complianceDictionary["arFutStudents"]))
+	f.write("Compliant Active Students: {:,}	Awaiting Review Active Students: {:,}\n"\
+			.format(complianceDictionary["cCurStudents"], complianceDictionary["arCurStudents"]))
+	f.write("Compliant Future Students: {:,}		Awaiting Review Future Students: {:,}\n"\
+			.format(complianceDictionary["cFutStudents"], complianceDictionary["arFutStudents"]))
 	f.write("Total Student Uploads: {:,}\n\n".format(studentUploads))
 
 	employeeUploads = complianceDictionary["cFaculty"] + complianceDictionary["cStaff"] \
@@ -231,31 +237,32 @@ def printCompliance(listOfPatients, complianceDictionary, path):
 					  + complianceDictionary["cASC"] + complianceDictionary["cASI"] \
 					  + complianceDictionary["arASC"] + complianceDictionary["arASI"]
 
-	f.write("Compliant Faculty: {:,}\n".format(complianceDictionary["cFaculty"]))
-	f.write("Compliant Staff: {:,}\n".format(complianceDictionary["cStaff"]))
-	f.write("Awaiting Review Faculty: {:,}\n".format(complianceDictionary["arFaculty"]))
-	f.write("Awaiting Review Staff: {:,}\n".format(complianceDictionary["arStaff"]))
-	f.write("Compliant ASC: {:,}\n".format(complianceDictionary["cASC"]))
-	f.write("Compliant ASI: {:,}\n".format(complianceDictionary["cASI"]))
-	f.write("Awaiting Review ASC: {:,}\n".format(complianceDictionary["arASC"]))
-	f.write("Awaiting Review ASI: {:,}\n".format(complianceDictionary["arASI"]))
+	f.write("Compliant Faculty: {:,}		Awaiting Review Faculty: {:,}\n"\
+			.format(complianceDictionary["cFaculty"], complianceDictionary["arFaculty"]))
+	f.write("Compliant Staff: {:,}			Awaiting Review Staff: {:,}\n"\
+			.format(complianceDictionary["cStaff"], complianceDictionary["arStaff"]))
+	f.write("Compliant ASC: {:,}			Awaiting Review ASC: {:,}\n"\
+			.format(complianceDictionary["cASC"], complianceDictionary["arASC"]))
+	f.write("Compliant ASI: {:,}			Awaiting Review ASI: {:,}\n"\
+			.format(complianceDictionary["cASI"], complianceDictionary["arASI"]))
 	f.write("Total Employee Uploads: {:,}\n\n".format(employeeUploads))
 
-	f.write("Not in Current Import Compliant: {:,}\n".format(complianceDictionary["cUnknown"]))
-	f.write("Not in Current Import Awaiting Review: {:,}\n\n".format(complianceDictionary["arUnknown"]))
+	f.write("Unspecified Compliant: {:,}		Unspecified Awaiting Review: {:,}\n\n"\
+			.format(complianceDictionary["cUnknown"], complianceDictionary["arUnknown"]))
 
 	unknownUploads = complianceDictionary["cUnknown"] + complianceDictionary["arUnknown"]
 	totalUploads = studentUploads + employeeUploads + unknownUploads
 
 	f.write("Grand Total Uploads: {:,}\n\n".format(totalUploads))
 
-	f.write("Medical Exemption Active Students: {:,}\n".format(complianceDictionary["meCurStudents"]))
-	f.write("Medical Exemption Future Students: {:,}\n".format(complianceDictionary["meFutStudents"]))
-	f.write("Medical Exemption Faculty: {:,}\n".format(complianceDictionary["meFaculty"]))
-	f.write("Medical Exemption Staff: {:,}\n".format(complianceDictionary["meStaff"]))
-	f.write("Medical Exemption ASI: {:,}\n".format(complianceDictionary["meASI"]))
-	f.write("Medical Exemption ASC: {:,}\n".format(complianceDictionary["meASC"]))
-	f.write("Medical Exemption Unknown: {:,}\n".format(complianceDictionary["meUnknown"]))
+	f.write("M.E. - Medical Exemption\n")
+	f.write("M.E. Active Students: {:,}		M.E. Future Students: {:,}\n"\
+			.format(complianceDictionary["meCurStudents"], complianceDictionary["meFutStudents"]))
+	f.write("M.E. Faculty: {:,}			M.E. Staff: {:,}\n"\
+			.format(complianceDictionary["meFaculty"], complianceDictionary["meStaff"]))
+	f.write("M.E. ASI: {:,}				M.E. ASC: {:,}\n"\
+			.format(complianceDictionary["meASI"], complianceDictionary["meASC"]))
+	f.write("M.E. Unknown: {:,}\n".format(complianceDictionary["meUnknown"]))
 
 	totalMed = complianceDictionary["meCurStudents"] + complianceDictionary["meFutStudents"] \
 			   + complianceDictionary["meFaculty"] + complianceDictionary["meStaff"] \
@@ -264,13 +271,14 @@ def printCompliance(listOfPatients, complianceDictionary, path):
 
 	f.write("Total Medical Exemptions: {:,}\n\n".format(totalMed))
 
-	f.write("Extension Exemption Active Students: {:,}\n".format(complianceDictionary["eeCurStudents"]))
-	f.write("Extension Exemption Future Students: {:,}\n".format(complianceDictionary["eeFutStudents"]))
-	f.write("Extension Exemption Faculty: {:,}\n".format(complianceDictionary["eeFaculty"]))
-	f.write("Extension Exemption Staff: {:,}\n".format(complianceDictionary["eeStaff"]))
-	f.write("Extension Exemption ASI: {:,}\n".format(complianceDictionary["eeASI"]))
-	f.write("Extension Exemption ASC: {:,}\n".format(complianceDictionary["eeASC"]))
-	f.write("Extension Exemption Unknown: {:,}\n".format(complianceDictionary["eeUnknown"]))
+	f.write("E.E. - Extension Exemption\n")
+	f.write("E.E. Active Students: {:,}		E.E. Future Students: {:,}\n"\
+			.format(complianceDictionary["eeCurStudents"], complianceDictionary["eeFutStudents"]))
+	f.write("E.E. Faculty: {:,}				E.E. Staff: {:,}\n"\
+			.format(complianceDictionary["eeFaculty"], complianceDictionary["eeStaff"]))
+	f.write("E.E. ASI: {:,}				E.E. ASC: {:,}\n"\
+			.format(complianceDictionary["eeASI"], complianceDictionary["eeASC"]))
+	f.write("E.E. Unknown: {:,}\n".format(complianceDictionary["eeUnknown"]))
 
 	totalRel = complianceDictionary["eeCurStudents"] + complianceDictionary["eeFutStudents"] \
 			   + complianceDictionary["eeFaculty"] + complianceDictionary["eeStaff"] \
@@ -279,13 +287,14 @@ def printCompliance(listOfPatients, complianceDictionary, path):
 
 	f.write("Total Extension Exemptions: {:,}\n\n".format(totalRel))
 
-	f.write("Religious Exemption Active Students: {:,}\n".format(complianceDictionary["reCurStudents"]))
-	f.write("Religious Exemption Future Students: {:,}\n".format(complianceDictionary["reFutStudents"]))
-	f.write("Religious Exemption Faculty: {:,}\n".format(complianceDictionary["reFaculty"]))
-	f.write("Religious Exemption Staff: {:,}\n".format(complianceDictionary["reStaff"]))
-	f.write("Religious Exemption ASI: {:,}\n".format(complianceDictionary["reASI"]))
-	f.write("Religious Exemption ASC: {:,}\n".format(complianceDictionary["reASC"]))
-	f.write("Religious Exemption Unknown: {:,}\n".format(complianceDictionary["reUnknown"]))
+	f.write("R.E. - Religious Exemption\n")
+	f.write("R.E. Active Students: {:,}		R.E. Future Students: {:,}\n"\
+			.format(complianceDictionary["reCurStudents"], complianceDictionary["reFutStudents"]))
+	f.write("R.E. Faculty: {:,}			R.E. Staff: {:,}\n"\
+			.format(complianceDictionary["reFaculty"], complianceDictionary["reStaff"]))
+	f.write("R.E. ASI: {:,}				R.E. ASC: {:,}\n"\
+			.format(complianceDictionary["reASI"], complianceDictionary["reASC"]))
+	f.write("R.E. Unknown: {:,}\n".format(complianceDictionary["reUnknown"]))
 
 	totalRel = complianceDictionary["reCurStudents"] + complianceDictionary["reFutStudents"] \
 			   + complianceDictionary["reFaculty"] + complianceDictionary["reStaff"] \
@@ -298,15 +307,23 @@ def printCompliance(listOfPatients, complianceDictionary, path):
 
 	f.write("Grand Total Exemptions: {:,}\n\n".format(totalExemp))
 
-	f.write("-------------------------------------\n\n")
+	f.write("--------------------------------------------------------------------\n\n")
 
-	f.write("Non-Compliant Active Students: {:,}\n".format(complianceDictionary["ncCurStudents"]))
-	f.write("Non-Compliant Future Students: {:,}\n".format(complianceDictionary["ncFutStudents"]))
-	f.write("Non-Compliant Faculty: {:,}\n".format(complianceDictionary["ncFaculty"]))
-	f.write("Non-Compliant Staff: {:,}\n".format(complianceDictionary["ncStaff"]))
-	f.write("Non-Compliant ASC: {:,}\n".format(complianceDictionary["ncASC"]))
-	f.write("Non-Compliant ASI: {:,}\n".format(complianceDictionary["ncASI"]))
-	f.write("Not in Current Import Non-Compliant: {:,}\n".format(complianceDictionary["ncUnknown"]))
+	f.write("N.C. - Not Compliant\n")
+	f.write("N.C. Active Students: {:,}		N.C. Future Students: {:,}\n"\
+			.format(complianceDictionary["ncCurStudents"], complianceDictionary["ncFutStudents"]))
+	f.write("N.C. Faculty: {:,}			N.C. Staff: {:,}\n"\
+			.format(complianceDictionary["ncFaculty"], complianceDictionary["ncStaff"]))
+	f.write("N.C. ASC: {:,}				N.C. ASI: {:,}\n"\
+			.format(complianceDictionary["ncASC"], complianceDictionary["ncASI"]))
+	f.write("Unspecified N.C.: {:,}\n\n".format(complianceDictionary["ncUnknown"]))
+
+	totalNC = complianceDictionary["ncCurStudents"] + complianceDictionary["ncFutStudents"] \
+			  + complianceDictionary["ncFaculty"] + complianceDictionary["ncStaff"] \
+			  + complianceDictionary["ncASC"] + complianceDictionary["ncASI"] \
+			  + complianceDictionary["ncUnknown"]
+
+	f.write("Grand Total Not Compliant: {:,}".format(totalNC))
 
 
 	f.close()

@@ -1,7 +1,7 @@
 # Compliance Counter
 Keeps count of vaccinated patients using CMS and PNC data, and makes reports by certain populations.
 
-*Last Updated: 11/10/2021*
+*Last Updated: 11/12/2021*
 
 ## File Naming
 - CSV export from PNC must be named: ***compliance.txt***

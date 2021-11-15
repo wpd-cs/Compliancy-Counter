@@ -5,10 +5,11 @@ William Duong
 Project started: July 12, 2021
 wpduong@gmail.com
 
-Last Updated: 11/12/2021
+Last Updated: 11/15/2021
 
 """
 
+from sys import exit
 import datetime
 import csv
 import os
@@ -20,6 +21,21 @@ class Patient:
 		self.status = status
 		self.acadStatus = acadStatus
 		self.patientType = patientType
+
+
+def checkFiles():
+	"""Check to make sure all input files are present"""
+	listOfFiles = ["compliance.txt", "employee.txt", "student.txt", \
+				   "nonstate.txt"]
+
+	filesNeeded = []
+
+	for file in listOfFiles:
+		if not os.path.exists(file):
+			filesNeeded.append(file)
+
+	if filesNeeded:
+		exit("ERROR\nMissing files: {}".format(filesNeeded))
 
 
 def readInCompliance(listOfPatients):
@@ -228,7 +244,7 @@ def printCompliance(listOfPatients, complianceDictionary, path):
 
 	f.write("Compliant Active Students: {:,}	Awaiting Review Active Students: {:,}\n"\
 			.format(complianceDictionary["cCurStudents"], complianceDictionary["arCurStudents"]))
-	f.write("Compliant Future Students: {:,}		Awaiting Review Future Students: {:,}\n"\
+	f.write("Compliant Future Students: {:,}	Awaiting Review Future Students: {:,}\n"\
 			.format(complianceDictionary["cFutStudents"], complianceDictionary["arFutStudents"]))
 	f.write("Total Student Uploads: {:,}\n\n".format(studentUploads))
 
@@ -492,6 +508,9 @@ def main():
 
 
 	# Begin read-in processes
+	print("Checking for all input files .................. ", end='')
+	checkFiles()
+	print("SUCCESS\n")
 	print("Reading compliance from PNC ................... ", end='')
 	readInCompliance(listOfPatients)
 	print("SUCCESS\n")

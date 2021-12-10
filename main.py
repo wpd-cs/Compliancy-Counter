@@ -181,6 +181,11 @@ def countCompliance(listOfPatients, complianceDictionary, compliantId, exemptId,
 			exemptId.append(temp)
 			temp2 = [patient.cwid]
 			participantId.append(temp2)
+		if patient.status == '"Exemption: Breast Feeding COVID"':
+			temp = [patient.cwid, patient.status.strip('"')]
+			exemptId.append(temp)
+			temp2 = [patient.cwid]
+			participantId.append(temp2)
 		if patient.status == '"Exemption: Religious COVID-19"':
 			if patient.patientType == "Faculty":
 				complianceDictionary["reFaculty"] += 1
